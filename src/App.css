@@ -1,0 +1,56 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+button{
+  padding: 15px;
+  margin: 15px;
+}
+
+ul{
+  list-style: none;
+}
+
+li{
+  background-color: rgb(38, 38, 38);
+  margin: 15px;
+  padding: 15px;
+  max-width: 800px;
+}
+
+form.addForm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 30px;
+
+  background-color: aliceblue;
+}
+
+input, textarea{
+  width: 80%;
+  padding: 10px;
+  margin: 5px;
+}
+
+h2.textForm{
+  color: black;
+}
+
+form.model{
+  flex-direction: column;
+  align-items: center;
+
+  max-width: 500px;
+  margin: 15px auto;
+  padding: 30px;
+
+  background-color: aliceblue;
+}
