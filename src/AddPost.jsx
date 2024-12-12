@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from 'axios';
 
 const AddPost = ({setPosts}) => {
   const [title, setTitle] = useState('')
@@ -8,44 +9,40 @@ const AddPost = ({setPosts}) => {
     event.preventDefault();
 
     try{
-      const response = await fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: 'POST',
-        headers:{
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          title,
-          body,
-          userId: 1
-        })
-      })
-      if (!response.ok)
-        throw new Error ('Ошибка', response.status)
+      const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {title, body, userId: 1})
       
-      const data = await response.json();
+      const data = response.data;
+
       setPosts((prev) => [data, ...prev]);
       setTitle('');
       setBody('');
       alert('Пост создан');
     } catch (error){
-      console.error('Ошибка', error);
+      if (error.response)
+        console.error('Ошибка HTTP запроса: ', error.response.status);
+      else if (error.request)
+        console.error('Нет ответа от сервера: ', error.request);
+      else
+        console.error('Ошибка: ', error.message)
     }
   }
 
   return(
-    <form onSubmit={fetchAdd} className="addForm">
-      <h2 className="textForm">Добавить новый пост</h2>
+    <form onSubmit={fetchAdd} className="add-form">
+      <h2 className="text-form">Добавить новый пост</h2>
       <input
       type="text"
       value={title}
       onChange={(event) => setTitle(event.target.value)}
       placeholder="Введите название поста"
+      required
       />
       <textarea
       rows={5}
       value={body}
       onChange={(event) => setBody(event.target.value)}
       placeholder="Введите текст поста"
+      required
       />
       <button type="submit">Добавить</button>
     </form>

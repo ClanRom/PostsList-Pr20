@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import axios from 'axios';
 
 const DetailsPost = ({id}) => {
   const [postDetails, setPostDetails] = useState('');
@@ -6,15 +7,17 @@ const DetailsPost = ({id}) => {
 
   const fetchPostsId = async() => {
     try{
-      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
-      if (!response.ok)
-        throw new Error ('Ошибка', response.status)
-      
-      const data = await response.json();
+      const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+
       setIsDesabled(true);
-      setPostDetails(data.body);
+      setPostDetails(response.data.body);
     } catch (error){
-      console.error('Ошибка', error);
+      if (error.response)
+        console.error('Ошибка HTTP запроса: ', error.response.status);
+      else if (error.request)
+        console.error('Нет ответа от сервера: ', error.request);
+      else
+        console.error('Ошибка: ', error.message)
     }
   }
 

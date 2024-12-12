@@ -1,6 +1,7 @@
 import './App.css'
 import { useState } from 'react';
 import PostsList from './PostsList'
+import axios from 'axios';
 
 export default function Board() {
   const [posts, setPosts] = useState([]);
@@ -8,30 +9,34 @@ export default function Board() {
 
   const fetchPosts = async() => {
     try{
-    const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-
-    if (!response.ok)
-      throw new Error ('Ошибка', response.status);
-
-    const data = await response.json();
-    setIsDesabled(true);
-    setPosts(data);
-    } catch (errror){
-      console.error('Ошибка: ', errror);
+      const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+      
+      setIsDesabled(true);
+      setPosts(response.data);
+    } catch (error){
+      if (error.response)
+        console.error('Ошибка HTTP запроса: ', error.response.status);
+      else if (error.request)
+        console.error('Нет ответа от сервера: ', error.request);
+      else
+        console.error('Ошибка: ', error.message)
+      
+      setIsDesabled(false);
     }
   }
 
   const fetchDeletePost = async(id) => {
     try{
-      const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
-        method: 'DELETE'
-      })
-      if (!response.ok)
-        throw new Error ('Ошибка', response.status)
+      const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`);
 
       setPosts(posts.filter((post) => post.id !== id));
     } catch (error){
-      console.error('Ошибка', error);
+      if (error.response)
+        console.error('Ошибка HTTP запроса: ', error.response.status);
+      else if (error.request)
+        console.error('Нет ответа от сервера: ', error.request);
+      else
+        console.error('Ошибка: ', error.message)
     }
   }
 
